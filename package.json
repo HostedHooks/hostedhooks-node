@@ -1,0 +1,41 @@
+{
+	"name": "hostedhooks-node",
+	"version": "1.0.0",
+	"description": "A nodejs library for the HostedHooks API",
+	"keywords": [
+		"webhooks",
+		"hostedhooks",
+		"nodejs"
+	],
+	"homepage": "https://github.com/HostedHooks/hostedhooks-node#readme",
+	"bugs": {
+		"url": "https://github.com/HostedHooks/hostedhooks-node/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/HostedHooks/hostedhooks-node.git"
+	},
+	"license": "MIT",
+	"author": "Salim Absi",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsup"
+	},
+	"dependencies": {
+		"cross-fetch": "^3.1.5"
+	},
+	"devDependencies": {
+		"@types/node": "^18.7.14",
+		"tsup": "^6.2.3",
+		"typescript": "^4.8.2"
+	}
+}
