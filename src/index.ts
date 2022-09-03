@@ -1,5 +1,49 @@
 import fetch from "cross-fetch"
 
+type App = {
+	id: string
+	name: string
+	created_at: string
+}
+
+type Subscription = {
+	id: string
+	subscriber_name: string
+	created_at: string
+	app: App
+}
+
+type WebhookEvent = {
+	id: string
+	event_type: string
+	created_at: string
+}
+
+type Endpoint = {
+	id: string
+	url: string
+	description: string
+	version: string
+	status: "active" | "inactive"
+	created_at: string
+	webhook_events: WebhookEvent[]
+	subscription: {
+		id: string
+		subscriber_name: string
+		created_at: string
+	}
+}
+
+type Message = {
+	id: string
+	data: {}
+	event_type: string
+	version: string
+	event_id: string
+	override_payload: false
+	created_at: string
+}
+
 type CreateEndpointParams = {
 	url: string
 	description?: string
@@ -18,6 +62,11 @@ type CreateMessageParams = {
 	override_payload?: boolean
 }
 
+type Error = {
+	error: string
+	code: number
+}
+
 export class HostedHooks {
 	private baseUrl = "https://hostedhooks.com/api/v1"
 	private apiKey: string
@@ -26,7 +75,7 @@ export class HostedHooks {
 		this.apiKey = (apiKey ?? process.env.HOSTEDHOOKS_API_KEY) as string
 	}
 
-	private async get(url: string): Promise<{}> {
+	private async get<T>(url: string): Promise<T | Error> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "GET",
@@ -45,7 +94,7 @@ export class HostedHooks {
 			throw err
 		}
 	}
-	private async post(url: string, params = {}): Promise<{}> {
+	private async post<T>(url: string, params = {}): Promise<T | Error> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "POST",
@@ -65,7 +114,7 @@ export class HostedHooks {
 			throw err
 		}
 	}
-	private async patch(url: string, params = {}): Promise<{}> {
+	private async patch<T>(url: string, params = {}): Promise<T | Error> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "PATCH",
@@ -88,62 +137,65 @@ export class HostedHooks {
 
 	// Apps
 	public async list_apps() {
-		return this.get("/apps")
+		return this.get<App[]>("/apps")
 	}
 	public async create_app(params: { name: string }) {
-		return this.post("/apps", params)
+		return this.post<App>("/apps", params)
 	}
 	public async update_app(uuid: string, params: { name: string }) {
-		return this.patch(`/apps${uuid}`, params)
+		return this.patch<App>(`/apps${uuid}`, params)
 	}
 
 	// Subscriptions
 	public async get_subscription(uuid: string) {
-		return this.get(`/subscriptions${uuid}`)
+		return this.get<Subscription>(`/subscriptions${uuid}`)
 	}
 	public async list_subscriptions(app_uuid: string) {
-		return this.get(`/apps/${app_uuid}/subscriptions`)
+		return this.get<Subscription[]>(`/apps/${app_uuid}/subscriptions`)
 	}
 	public async create_subscription(app_uuid: string, params: { name: string }) {
-		return this.post(`/apps/${app_uuid}/subscriptions`, params)
+		return this.post<Subscription>(`/apps/${app_uuid}/subscriptions`, params)
 	}
 
 	// Endpoints
 	public async get_endpoint(app_uuid: string, endpoint_uuid: string) {
-		return this.get(`/apps/${app_uuid}/endpoints/${endpoint_uuid}`)
+		return this.get<Endpoint>(`/apps/${app_uuid}/endpoints/${endpoint_uuid}`)
 	}
 	public async list_endpoints(app_uuid: string) {
-		return this.get(`/apps/${app_uuid}/endpoints`)
+		return this.get<Endpoint[]>(`/apps/${app_uuid}/endpoints`)
 	}
 	public async create_endpoint(subscription_uuid: string, params: CreateEndpointParams) {
-		return this.post(`/subscriptions/${subscription_uuid}/endpoints`, params)
+		return this.post<Endpoint>(`/subscriptions/${subscription_uuid}/endpoints`, params)
 	}
 	public async update_endpoint(
 		subscription_uuid: string,
 		endpoint_uuid: string,
 		params: UpdateEndpointParams
 	) {
-		return this.patch(`/subscriptions/${subscription_uuid}/endpoints/${endpoint_uuid}`, params)
+		return this.patch<Endpoint>(
+			`/subscriptions/${subscription_uuid}/endpoints/${endpoint_uuid}`,
+			params
+		)
 	}
 
 	// Webhook Events
 	public async list_webhook_events(app_uuid: string) {
-		return this.get(`/apps/${app_uuid}/webhook_events`)
+		return this.get<WebhookEvent[]>(`/apps/${app_uuid}/webhook_events`)
 	}
 
 	// Messages
 	public async create_app_message(app_uuid: string, params: CreateMessageParams) {
-		return this.post(`/apps/${app_uuid}/messages`, params)
+		return this.post<Message>(`/apps/${app_uuid}/messages`, params)
 	}
 	public async create_subscription_message(subscription_uuid: string, params: CreateMessageParams) {
-		return this.post(`/subscriptions/${subscription_uuid}/messages`, params)
+		return this.post<Message>(`/subscriptions/${subscription_uuid}/messages`, params)
 	}
 	public async create_endpoint_message(
 		subscription_uuid: string,
 		endpoint_uuid: string,
 		params: CreateMessageParams
 	) {
-		return this.post(
+		return this.post<Message>(
 			`/subscriptions/${subscription_uuid}/endpoints/${endpoint_uuid}/messages`,
 			params
 		)
