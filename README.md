@@ -1,6 +1,6 @@
 # HostedHooks Nodejs Library
 
-A Nodejs library for [HostedHooks](https://www.hostedhooks.com),  a Webhooks as a Service Platform
+A Nodejs library for [HostedHooks](https://www.hostedhooks.com),  a Webhooks as a Service Platform.
 
 ## Installation
 
@@ -22,7 +22,7 @@ import { HostedHooks } from "hostedhooks-node"
 
 ### Authentication
 
-Create an object with your API key that is [found here](https://www.hostedhooks.com/settings/account)
+Create an object with your API key that is [found here](https://www.hostedhooks.com/settings/account).
 
 ```js
 const client = new HostedHooks("HOSTEDHOOKS_API_KEY")
