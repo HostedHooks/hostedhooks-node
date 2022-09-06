@@ -98,8 +98,11 @@ export class HostedHooks {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${this.apiKey}`,
+				},
 				body: JSON.stringify(params),
-				headers: { Authorization: `Bearer ${this.apiKey}` },
 			})
 			const json = await response.json()
 
@@ -118,8 +121,11 @@ export class HostedHooks {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${this.apiKey}`,
+				},
 				body: JSON.stringify(params),
-				headers: { Authorization: `Bearer ${this.apiKey}` },
 			})
 			const json = await response.json()
 
