@@ -75,7 +75,7 @@ export class HostedHooks {
 		this.apiKey = (apiKey ?? process.env.HOSTEDHOOKS_API_KEY) as string
 	}
 
-	private async get<T>(url: string): Promise<T | Error> {
+	private async get<T>(url: string): Promise<T> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "GET",
@@ -84,8 +84,8 @@ export class HostedHooks {
 			const json = await response.json()
 
 			if (response.status >= 400) {
-				return {
-					error: json.message,
+				throw {
+					error: json.error,
 					code: response.status,
 				}
 			}
@@ -94,7 +94,7 @@ export class HostedHooks {
 			throw err
 		}
 	}
-	private async post<T>(url: string, params = {}): Promise<T | Error> {
+	private async post<T>(url: string, params = {}): Promise<T> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "POST",
@@ -104,8 +104,8 @@ export class HostedHooks {
 			const json = await response.json()
 
 			if (response.status >= 400) {
-				return {
-					error: json.message,
+				throw {
+					error: json.error,
 					code: response.status,
 				}
 			}
@@ -114,7 +114,7 @@ export class HostedHooks {
 			throw err
 		}
 	}
-	private async patch<T>(url: string, params = {}): Promise<T | Error> {
+	private async patch<T>(url: string, params = {}): Promise<T> {
 		try {
 			const response = await fetch(`${this.baseUrl}${url}`, {
 				method: "PATCH",
@@ -124,8 +124,8 @@ export class HostedHooks {
 			const json = await response.json()
 
 			if (response.status >= 400) {
-				return {
-					error: json.message,
+				throw {
+					error: json.error,
 					code: response.status,
 				}
 			}
