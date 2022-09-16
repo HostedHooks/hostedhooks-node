@@ -62,6 +62,25 @@ type CreateMessageParams = {
 	override_payload?: boolean
 }
 
+type WebhookAttempt = {
+	id: string
+	status_code: string
+	retry_status: "scheduled" | "failed"
+	status_message: "success" | "failed"
+	payload: {
+		type: string
+		version: string
+		created: string
+		data: {}
+	}
+	response: string
+	error_message: string
+	app_id: string
+	endpoint_id: string
+	message_id: string
+	created_at: string
+}
+
 type PaginationQuery = Partial<{
 	page: number
 	per_page: number
@@ -220,5 +239,13 @@ export class HostedHooks {
 			`/subscriptions/${subscription_uuid}/endpoints/${endpoint_uuid}/messages`,
 			params
 		)
+	}
+
+	// Endpoints
+	public async get_webhook_attempt(app_uuid: string, webhook_attempt_uuid: string) {
+		return this.get<WebhookAttempt>(`/apps/${app_uuid}/webhook_attempts/${webhook_attempt_uuid}`)
+	}
+	public async list_webhook_attempts(app_uuid: string, query?: PaginationQuery) {
+		return this.get<WebhookAttempt[]>(`/apps/${app_uuid}/webhook_attempts`, query)
 	}
 }
