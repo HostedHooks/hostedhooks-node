@@ -62,11 +62,6 @@ type CreateMessageParams = {
 	override_payload?: boolean
 }
 
-type Error = {
-	error: string
-	code: number
-}
-
 export class HostedHooks {
 	private baseUrl = "https://hostedhooks.com/api/v1"
 	private apiKey: string
