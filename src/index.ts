@@ -49,7 +49,7 @@ type CreateEndpointParams = {
 	description?: string
 	version: string
 	status?: "active" | "inactive"
-	enabled_events: string[] | "*"
+	enabled_events?: string[] | "*"
 }
 
 type UpdateEndpointParams = Partial<CreateEndpointParams>
