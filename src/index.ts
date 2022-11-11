@@ -241,9 +241,9 @@ export class HostedHooks {
 		)
 	}
 
-	// Endpoints
-	public async get_webhook_attempt(app_uuid: string, webhook_attempt_uuid: string) {
-		return this.get<WebhookAttempt>(`/apps/${app_uuid}/webhook_attempts/${webhook_attempt_uuid}`)
+	// Webhook Attempt
+	public async get_webhook_attempt(app_uuid: string, endpoint_uuid: string) {
+		return this.get<WebhookAttempt>(`/apps/${app_uuid}/endpoints/${endpoint_uuid}/webhook_attempts`)
 	}
 	public async list_webhook_attempts(app_uuid: string, query?: PaginationQuery) {
 		return this.get<WebhookAttempt[]>(`/apps/${app_uuid}/webhook_attempts`, query)
